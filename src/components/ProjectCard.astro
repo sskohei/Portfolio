@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectStatus from './ProjectStatus.astro';
+import { formatDate } from '../data/content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  heading?: 'h2' | 'h3';
+}
+
+const { project, heading: Heading = 'h3' } = Astro.props;
+const { title, summary, date, status, image, imageAlt } = project.data;
+const href = `/projects/${project.id}/`;
+---
+<article class="project-card">
+  <div class="project-media">
+    {image
+      ? <img src={image} alt={imageAlt} width="900" height="600" loading="lazy" decoding="async" />
+      : <div class="project-media-placeholder" aria-hidden="true"></div>}
+  </div>
+  <div class="project-card-body">
+    <div class="project-meta">
+      <ProjectStatus status={status} />
+      <time datetime={date}>{formatDate(date)}</time>
+    </div>
+    <Heading><a href={href}>{title}</a></Heading>
+    <p>{summary}</p>
+  </div>
+</article>

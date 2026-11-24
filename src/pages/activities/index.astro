@@ -1,0 +1,17 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ActivityList from '../../components/ActivityList.astro';
+import { getPublishedEntries } from '../../data/content';
+
+const activities = await getPublishedEntries('activities');
+const description = '制作の進捗や、取り組んだことを日付順にまとめています。';
+---
+<SiteLayout title="活動" description={description}>
+  <header class="shell page-intro">
+    <h1>活動</h1>
+    <p>{description}</p>
+  </header>
+  <section class="shell page-list" aria-label="活動一覧">
+    <ActivityList entries={activities} heading="h2" />
+  </section>
+</SiteLayout>

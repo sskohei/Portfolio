@@ -1,0 +1,50 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ProjectStatus from '../../components/ProjectStatus.astro';
+import { formatDate, getPublishedEntries } from '../../data/content';
+
+export async function getStaticPaths() {
+  const projects = await getPublishedEntries('projects');
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, date, status, image, imageAlt, links } = project.data;
+const { Content } = await render(project);
+---
+<SiteLayout title={title} description={summary}>
+  <article class="shell project-detail">
+    <a class="text-link back-link" href="/projects/">作品一覧に戻る</a>
+    <header>
+      <div class="project-meta">
+        <ProjectStatus status={status} />
+        <time datetime={date}>{formatDate(date)}</time>
+      </div>
+      <h1>{title}</h1>
+      <p>{summary}</p>
+    </header>
+    {image && (
+      <figure class="detail-media">
+        <img src={image} alt={imageAlt} width="900" height="600" fetchpriority="high" />
+      </figure>
+    )}
+    <div class="detail-body">
+      <div class="prose"><Content /></div>
+      {links.length > 0 && (
+        <ul class="detail-links" aria-label="作品の関連リンク">
+          {links.map(({ label, url }) => (
+            <li><a class="button button-secondary" href={url}>{label}</a></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </article>
+</SiteLayout>

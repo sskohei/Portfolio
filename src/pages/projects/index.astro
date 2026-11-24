@@ -1,0 +1,21 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getPublishedEntries } from '../../data/content';
+
+const projects = await getPublishedEntries('projects');
+const description = '公開したものや制作途中のものを、作品ごとに紹介します。';
+---
+<SiteLayout title="作品" description={description}>
+  <header class="shell page-intro">
+    <h1>作品</h1>
+    <p>{description}</p>
+  </header>
+  <section class="shell page-list" aria-label="作品一覧">
+    {projects.length > 0 ? (
+      <div class="project-grid">
+        {projects.map((project) => <ProjectCard project={project} heading="h2" />)}
+      </div>
+    ) : <p class="empty-state">公開中の作品はまだありません。</p>}
+  </section>
+</SiteLayout>

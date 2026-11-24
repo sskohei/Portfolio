@@ -1,0 +1,12 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  status: CollectionEntry<'projects'>['data']['status'];
+}
+
+const { status } = Astro.props;
+---
+<span class:list={['project-status', { 'status-progress': status === 'in-progress' }]}>
+  {status === 'released' ? '公開済み' : '制作中'}
+</span>
